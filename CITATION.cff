@@ -1,0 +1,14 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Methods for 'Estimates of timing of geophysical
+  commitment to 1.5 and 2.0°C of global warming'
+message: Citation
+type: software
+authors:
+  - given-names: Dvorak
+    family-names: Michelle
+    affiliation: University of Washington
+    orcid: 'https://orcid.org/0000-0003-3956-9773'
