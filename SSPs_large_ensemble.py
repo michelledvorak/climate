@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# Running World Without Us scenarios for SSP 585 with AR6 scaling factors; generating large ensemble; constraining results; identifying parameter relationships that arise
+# Running emissions shut-off experiment with AR6 scaling factors; generating large ensemble; constraining results; identifying parameter relationships that arise
+# requires SSP modules found under SSPs branch
 
 # In[1]:
 
@@ -22,7 +23,7 @@ from fair.forward3 import fair_scm
 # In[2]:
 
 
-from fair.SSPs import ssp119, ssp126, ssp245, ssp370, ssp434, ssp585
+from fair.SSPs_mine import ssp119, ssp126, ssp245, ssp370, ssp434, ssp585 
 nt = 2020-1765
 
 # In[3]:
