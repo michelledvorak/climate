@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# Use constrained ensemble to estimate committed warming today. Cessation of all emissions + CO2 only.
+# Use constrained ensemble to estimate committed warming today. Cessation of CO2 only, all other forcing held constant.
 
 # In[1]:
 
@@ -25,13 +25,9 @@ nt = 2201-1765 # up to 2100
 # In[3]:
 
 
-natural = fair.ancil.natural.Emissions.emissions[:nt]
+natural = fair.ancil.natural.Emissions.emissions[:nt] # built-in
 SSP_245 = ssp245.Emissions_245.emissions[0:nt,:]
-#natural_2 = fair.ancil.natural_2.Emissions.emissions[:nt]
-
-#run all three ensembles: original, standard (should be almost the same), and inflated
-# all ensembles use natural, not natural_2
-# figure out why standard + inflated warm so much more in CO2-only case (looks like an issue with GHG emissions)
+#natural_2 = fair.ancil.natural_2.Emissions.emissions[:nt] # constant 1765 natural emissions
 
 ECS = np.load('../FAIR-master/remote_runs_NOx/ECS_post_remote.npy')
 lamda = np.load('../FAIR-master/remote_runs_NOx/lamda_post_remote.npy')
@@ -90,69 +86,10 @@ print('Running the standard ensemble for a shut-off of only CO2 today, all other
 print('NOx emissions in 2020 are: ' + str(SSP_245[2021-1765,8]))
 print('NOx forcing in 2020 is: ' + str(F[2021-1765,8,:].mean()))
 
-# T_245_CO2_1765 = np.zeros((nt,nc))
-
-# for i in range(nc):
-#     _, _, T_245_CO2_1765[:,i], _ = fair.forward3.fair_scm(useMultigas=False, emissions=CO2_1765, 
-#                                   eps = epsilon[i], #mean feedback parameters to be consistent with scaling factors
-#                                   lam = (3.71*scale[i,0])/ECS[i],
-#                                   gam = gamma[i],
-#                                   Cml = Cml[i] * 31363200,
-#                                   Cdeep = Cdeep[i] * 31363200,
-#                                   r0 = r0[i],
-#                                   rc = rc[i],
-#                                   rt = rt[i],
-#                                   other_rf = constant_F[:,i],
-#                                   scale = scale[i,0],
-# #                                      F2x = 3.71*scale_norm[i,0], removed due to redunancy
-#                                   F_solar=np.zeros(nt),
-#                                   F_volcanic=0.6*volcanic,
-#                                   natural=natural,
-#                                   scaleAerosolAR5=False)
-
-# #         if T_370[:,i,k].max() > 2:
-# #             committed_370[i] = k
-# T_245_CO2_1765 = T_245_CO2_1765 - T_245_CO2_1765[1850-1765:1900-1765,:].mean(axis=0)    
-
-# np.save('../FAIR-master/remote_runs_NOx/Sensitivity_tests/T_245_CO2_1765', T_245_CO2_1765)
-
-# T_245_CO2_pi = np.zeros((nt,nc))
-
-# for i in range(nc):
-#     _, _, T_245_CO2_pi[:,i], _ = fair.forward3.fair_scm(useMultigas=False, emissions=CO2_pi, 
-#                                   eps = epsilon[i], #mean feedback parameters to be consistent with scaling factors
-#                                   lam = (3.71*scale[i,0])/ECS[i],
-#                                   gam = gamma[i],
-#                                   Cml = Cml[i] * 31363200,
-#                                   Cdeep = Cdeep[i] * 31363200,
-#                                   r0 = r0[i],
-#                                   rc = rc[i],
-#                                   rt = rt[i],
-#                                   other_rf = constant_F[:,i],
-#                                   scale = scale[i,0],
-# #                                      F2x = 3.71*scale_norm[i,0], removed due to redunancy
-#                                   F_solar=np.zeros(nt),
-#                                   F_volcanic=0.6*volcanic,
-#                                   natural=natural,
-#                                   scaleAerosolAR5=False)
-
-# #         if T_370[:,i,k].max() > 2:
-# #             committed_370[i] = k
-# T_245_CO2_pi = T_245_CO2_pi - T_245_CO2_pi[1850-1765:1900-1765,:].mean(axis=0)    
-
-# np.save('../FAIR-master/remote_runs_NOx/Sensitivity_tests/T_245_CO2_preind', T_245_CO2_pi)
-
-# C_245_CO2 = np.zeros((nt,nc))
-# F_245_CO2 = np.zeros((nt,nc))
-# T_245_CO2 = np.zeros((nt,nc))
-N_245_CO2 = np.zeros((nt,nc))
-
-natural = np.zeros(fair.ancil.natural.Emissions.emissions[:nt].shape)
-
-print('natural emissions in %s are: %s' %(sy, natural[2020-1765]))
+T_245_CO2_1765 = np.zeros((nt,nc))
 
 for i in range(nc):
-    _, _, _, N_245_CO2[:,i] = fair.forward3.fair_scm(useMultigas=False, emissions=CO2_off, 
+    _, _, T_245_CO2_1765[:,i], _ = fair.forward3.fair_scm(useMultigas=False, emissions=CO2_1765, 
                                   eps = epsilon[i], #mean feedback parameters to be consistent with scaling factors
                                   lam = (3.71*scale[i,0])/ECS[i],
                                   gam = gamma[i],
@@ -169,14 +106,33 @@ for i in range(nc):
                                   natural=natural,
                                   scaleAerosolAR5=False)
 
-#         if T_370[:,i,k].max() > 2:
-#             committed_370[i] = k
-# T_245_CO2 = T_245_CO2 - T_245_CO2[1850-1765:1900-1765,:].mean(axis=0)    
+T_245_CO2_1765 = T_245_CO2_1765 - T_245_CO2_1765[1850-1765:1900-1765,:].mean(axis=0)    
 
-# np.save('../FAIR-master/remote_runs_NOx/Sensitivity_tests/CO2/C_245_CO2_long', C_245_CO2)
-# np.save('../FAIR-master/remote_runs_NOx/Sensitivity_tests/CO2/F_245_CO2_long', F_245_CO2)
-# np.save('../FAIR-master/remote_runs_NOx/Sensitivity_tests/CO2/T_245_CO2_long', T_245_CO2)
-np.save('../FAIR-master/remote_runs_NOx/Sensitivity_tests/CO2/N_245_CO2_long', N_245_CO2)
+np.save('../FAIR-master/remote_runs_NOx/Sensitivity_tests/T_245_CO2_1765', T_245_CO2_1765)
+
+T_245_CO2_pi = np.zeros((nt,nc))
+
+for i in range(nc):
+    _, _, T_245_CO2_pi[:,i], _ = fair.forward3.fair_scm(useMultigas=False, emissions=CO2_pi, 
+                                  eps = epsilon[i], #mean feedback parameters to be consistent with scaling factors
+                                  lam = (3.71*scale[i,0])/ECS[i],
+                                  gam = gamma[i],
+                                  Cml = Cml[i] * 31363200,
+                                  Cdeep = Cdeep[i] * 31363200,
+                                  r0 = r0[i],
+                                  rc = rc[i],
+                                  rt = rt[i],
+                                  other_rf = constant_F[:,i],
+                                  scale = scale[i,0],
+#                                      F2x = 3.71*scale_norm[i,0], removed due to redunancy
+                                  F_solar=np.zeros(nt),
+                                  F_volcanic=0.6*volcanic,
+                                  natural=natural,
+                                  scaleAerosolAR5=False)
+
+T_245_CO2_pi = T_245_CO2_pi - T_245_CO2_pi[1850-1765:1900-1765,:].mean(axis=0)    
+
+np.save('../FAIR-master/remote_runs_NOx/Sensitivity_tests/T_245_CO2_preind', T_245_CO2_pi)
 
 end_time = time.time()
 print(f"The execution time is: {(end_time-start_time)/60} minutes")
