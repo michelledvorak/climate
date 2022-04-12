@@ -49,6 +49,7 @@ SSP_names = ['126', '370', '245', '585']
 
 
 # In[5]:
+# Upload posteriors
 
 ECS = np.load('../FAIR-master/remote_runs_NOx/ECS_post_remote.npy')
 lamda = np.load('../FAIR-master/remote_runs_NOx/lamda_post_remote.npy')
@@ -97,6 +98,8 @@ print('The simulation will run for %s shut-off years' %years)
 print('The first shut-off year is: %s' %sy)
 
 # In[40]:
+
+# Run the shut-off experiment (6723 x 60 x 8)
 
 for name in SSP_names[1:]:
     print('Running full shut-off experiment for %s' %(name))
