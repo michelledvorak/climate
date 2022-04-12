@@ -1,4 +1,4 @@
-## this is Chris Smith's forward.py module modified slightly to use the Held 2-layer ocean model
+## this is Chris Smith's forward.py module modified slightly to use the Held 2-layer ocean model (forc_to_temp2)
 ## returns additional variable, N: top-of-atmosphere energy imbalance. 
 ## It is nested within the FaIR model: https://github.com/OMS-NetZero/FAIR.
 
