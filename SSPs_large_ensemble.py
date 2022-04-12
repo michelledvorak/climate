@@ -70,35 +70,6 @@ F_2018 = [F585[253,0], F585[253,1], F585[253,2], F585[253,8]]
 
 F_2018[0] - F_1765[0]
 
-
-# World Without Us Scenarios: return to pre-industrial (1765) emissions levels for primary gases
-
-# In[8]:
-
-
-
-# In[9]:
-
-
-#2021 = year 256
-#2018 = year 253
-
-# #return to 1765 emissions levels
-
-# sy = 2020-1765 #start year
-
-# emissions = np.zeros((nt, 40))
-# emissions[:sy,:] = SSP_245[0:sy,:]
-# emissions[sy:,0] = SSP_245[sy:,0]
-# emissions[sy:,1:5] = 0
-
-# for i in range(5,40):
-#     emissions[sy:,i] = SSP_245[0,i]
-
-
-# In[10]:
-
-
 import scipy as sci
 
 # AR6 reported 90% confidence interval
@@ -184,7 +155,7 @@ gam_replace = stats.norm.rvs(size=ne, loc=gamma[1], scale=gam_s, random_state=63
 #Cdeep_replace = np.random.uniform(low=20, high=280, size=ne)
 Cdeep_replace = stats.norm.rvs(size=ne, loc=109, scale=78, random_state=39494)
     
-for i,j in zip(range(len(gam_norm)), range(len(gam_replace))):
+for i,j in zip(range(len(gam_norm)), range(len(gam_replace))): # Truncate the distribution by replacing values < 0.1
     
     while gam_norm[i] < 0.1:
         if gam_replace[j] > 0.1:
@@ -192,7 +163,7 @@ for i,j in zip(range(len(gam_norm)), range(len(gam_replace))):
         else:
             j += 1
         
-for i,j in zip(range(len(Cdeep_norm)), range(len(Cdeep_replace))):
+for i,j in zip(range(len(Cdeep_norm)), range(len(Cdeep_replace))): # same for deep ocean heat capacity < 10 (100 m)
     
     while Cdeep_norm[i] < 10:
         if Cdeep_replace[j] > 10:
@@ -310,6 +281,8 @@ ECS_c = ECS_uniform[constrained_2]
 
 aero_c = F[253,8,constrained_2]
 
+# Save all outputs
+
 # In[181]:
 np.save('../FAIR-master/remote_runs_NOx/ECS_prior_remote.npy', ECS_uniform)
 np.save('../FAIR-master/remote_runs_NOx/ECS_post_remote.npy', ECS_c)
@@ -347,7 +320,7 @@ np.save('../FAIR-master/remote_runs_NOx/rc_post.npy', rc[constrained_2])
 np.save('../FAIR-master/remote_runs_NOx/rt_post.npy', rt[constrained_2])
 
 # In[182]:
-
+# Create a dataframe to easily view priors and posteriors
 
 df_array = np.ndarray((16,3))
 df_array[0,0] = np.percentile(ECS_uniform, 5)
